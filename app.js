@@ -4,6 +4,8 @@ var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var path = require("path");
+const cors = require("cors");
+const port = process.env.PORT || 3000;
 
 var indexRouter = require("./routes/index");
 var countriesRouter = require("./routes/countries");
@@ -19,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
 
 // Mongoose
 mongoose.connect(
@@ -48,5 +51,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
-
+app.listen(port, () => {
+  console.log(`Redo på http://localhost:${port}/`);
+});
 module.exports = app;

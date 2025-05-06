@@ -19,12 +19,21 @@ router.post("/", function (req, res, next) {
 });
 
 // UPDATE
-router.put("/:id", function (req, res, next) {
-  CountryModel.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(
-    function (updatedPost) {
-      res.json(updatedPost);
+router.put("/:id", async (req, res, next) => {
+  try {
+    const updated = await CountryModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!updated) {
+      return res.status(404).json({ message: "Country not found" });
     }
-  );
+    res.json(updated);
+  } catch (err) {
+    console.error("PUT error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 //DELETE

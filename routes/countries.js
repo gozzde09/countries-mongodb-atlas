@@ -37,9 +37,17 @@ router.put("/:id", async (req, res, next) => {
 });
 
 //DELETE
-router.delete("/:id", function (req, res, next) {
-  CountryModel.findByIdAndDelete(req.params.id, req.body).then(function (post) {
-    res.json(post);
-  });
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const deleted = await CountryModel.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Country not found" });
+    }
+    res.json({ message: "Deleted successfully" });
+  } catch (err) {
+    console.error("DELETE error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
 module.exports = router;
